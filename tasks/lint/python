@@ -11,9 +11,9 @@ else
     RUFF="$SHARED/bin/ruff"
 fi
 
-# Config resolution: local project config wins, otherwise shared default
-if [ -f "$MISE_PROJECT_ROOT/ruff.toml" ] || [ -f "$MISE_PROJECT_ROOT/pyproject.toml" ]; then
-    "$RUFF" check .
+# Config resolution: local .lint/ruff.toml wins, otherwise shared default
+if [ -f "$MISE_PROJECT_ROOT/.lint/ruff.toml" ]; then
+    "$RUFF" check --config "$MISE_PROJECT_ROOT/.lint/ruff.toml" .
 else
     "$RUFF" check --config "$SHARED/config/ruff.toml" .
 fi
