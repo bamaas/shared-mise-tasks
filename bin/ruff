@@ -1,0 +1,23 @@
+#!/usr/bin/env -S mise tool-stub
+
+version = "0.15.22"
+
+[platforms.darwin-arm64]
+url = "https://github.com/astral-sh/ruff/releases/download/0.15.22/ruff-aarch64-apple-darwin.tar.gz"
+checksum = "blake3:0e980fa04bb05f34f41eb552d6c605df1dfd5bd547857b86cfe92a6827ec7b93"
+size = 9953013 # 9.5 MiB
+
+[platforms.darwin-x64]
+url = "https://github.com/astral-sh/ruff/releases/download/0.15.22/ruff-x86_64-apple-darwin.tar.gz"
+checksum = "blake3:d5e31f7ec1c0387a352ea9880c5e9c55a1069b10bd34bbbdb9f96bc57ffb6da1"
+size = 10608019 # 10.1 MiB
+
+[platforms.linux-x64]
+url = "https://github.com/astral-sh/ruff/releases/download/0.15.22/ruff-x86_64-unknown-linux-gnu.tar.gz"
+checksum = "blake3:b55fdd0000de350f120d8f00000bf09e8458050284d50e366b852f7e9f5669f8"
+size = 11011880 # 10.5 MiB
+
+[platforms.linux-arm64]
+url = "https://github.com/astral-sh/ruff/releases/download/0.15.22/ruff-aarch64-unknown-linux-gnu.tar.gz"
+checksum = "blake3:dcdca8a48d8c46aff6e6504a1c8c243cec00c0877588ccaf75faa211ba0c8fd2"
+size = 10355557 # 9.9 MiB

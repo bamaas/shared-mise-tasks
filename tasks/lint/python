@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#MISE description="Lint Python code with ruff"
+set -euo pipefail
+
+SHARED="$(cd "$(dirname "$0")/../.." && pwd)"
+
+# Tool resolution: PATH wins, otherwise shared stub
+if command -v ruff &>/dev/null; then
+    RUFF="ruff"
+else
+    RUFF="$SHARED/bin/ruff"
+fi
+
+# Config resolution: local project config wins, otherwise shared default
+if [ -f "$MISE_PROJECT_DIR/ruff.toml" ] || [ -f "$MISE_PROJECT_DIR/pyproject.toml" ]; then
+    "$RUFF" check .
+else
+    "$RUFF" check --config "$SHARED/config/ruff.toml" .
+fi
