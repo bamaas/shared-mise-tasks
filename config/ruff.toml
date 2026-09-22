@@ -1,5 +1,9 @@
 # Shared ruff configuration — default lint rules
 line-length = 120
 
+# CI points MISE_DATA_DIR at $CI_PROJECT_DIR/.mise so GitLab can cache it;
+# installed tools must not be linted.
+exclude = [".mise"]
+
 [lint]
 select = ["E", "F", "W", "I"]

@@ -1,0 +1,4 @@
+[task_config]
+# The tasks in this repo are also used by this repo, so `mise run lint:ruff`
+# works here without a remote include.
+includes = ["tasks"]

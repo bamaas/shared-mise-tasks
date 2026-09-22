@@ -1,0 +1,39 @@
+stages:
+  - test
+  - release
+
+default:
+  image: ghcr.io/jdx/mise:2026.9.11-debian
+  interruptible: true
+
+variables:
+  MISE_DATA_DIR: $CI_PROJECT_DIR/.mise
+  MISE_CACHE_DIR: $CI_PROJECT_DIR/.mise/cache
+
+# The shared tasks lint this repo's own fixture with the exact command a
+# consuming project runs, so a broken task fails here before it is tagged.
+self-test:
+  stage: test
+  cache:
+    key:
+      prefix: mise-selftest
+      files:
+        - mise.toml
+    paths:
+      - .mise/installs/
+      - .mise/cache/
+  script:
+    - mise run lint:ruff
+
+# Publishes templates/ to the CI/CD Catalog. The tag is what consumers pin in
+# both their .gitlab-ci.yml component version and their mise.toml include ref.
+create-release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/
+  script:
+    - echo "publishing $CI_COMMIT_TAG to the CI/CD Catalog"
+  release:
+    tag_name: $CI_COMMIT_TAG
+    description: "shared-mise-tasks $CI_COMMIT_TAG"

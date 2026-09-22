@@ -1,0 +1,54 @@
+spec:
+  inputs:
+    job_name:
+      description: "Name of the generated job. Set a unique value per include."
+    task:
+      description: "mise task to run, for example lint:ruff. Must exist in this repo's tasks/."
+    stage:
+      default: test
+      description: "Stage the job runs in. The stage must exist in the consuming pipeline."
+    image:
+      default: "ghcr.io/jdx/mise:2026.9.11-debian"
+      description: "Image containing mise. Point this at the internal mirror in air-gapped environments."
+    args:
+      default: ""
+      description: "Extra arguments passed through to the task after --."
+    allow_failure:
+      default: false
+      type: boolean
+    cache_prefix:
+      default: mise
+      description: "Cache key prefix. Change it per runner architecture."
+---
+# Runs a shared mise task. The job holds no tool name, no version and no lint
+# logic: all of that lives in the task file that mise pulls from this repo, so
+# a developer running `mise run <task>` locally executes the same script and the
+# same tool build as the pipeline.
+"$[[ inputs.job_name ]]":
+  stage: $[[ inputs.stage ]]
+  image: $[[ inputs.image ]]
+  allow_failure: $[[ inputs.allow_failure ]]
+  interruptible: true
+  variables:
+    # Keep mise's data and cache inside the project so GitLab can cache them.
+    MISE_DATA_DIR: $CI_PROJECT_DIR/.mise
+    MISE_CACHE_DIR: $CI_PROJECT_DIR/.mise/cache
+    # Remote git task includes are still experimental in mise.
+    MISE_EXPERIMENTAL: "1"
+    MISE_YES: "1"
+  cache:
+    key:
+      prefix: $[[ inputs.cache_prefix ]]
+      files:
+        - mise.toml
+        - mise.lock
+    paths:
+      - .mise/installs/
+      - .mise/cache/
+  before_script:
+    # Let mise clone the shared tasks repo over HTTPS with the pipeline's own
+    # job token. Add the consuming project to the shared project's job token
+    # allowlist (Settings > CI/CD > Job token permissions).
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/".insteadOf "https://${CI_SERVER_HOST}/"
+  script:
+    - mise run $[[ inputs.task ]] -- $[[ inputs.args ]]
