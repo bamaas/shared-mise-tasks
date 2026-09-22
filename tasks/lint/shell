@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="Lint shell scripts with shellcheck"
+#MISE tools={ "http:shellcheck" = { version = "0.11.0", platforms = { "macos-arm64" = { url = "https://github.com/koalaman/shellcheck/releases/download/v{% raw %}{{version}}{% endraw %}/shellcheck-v{% raw %}{{version}}{% endraw %}.darwin.aarch64.tar.xz", checksum = "sha256:56affdd8de5527894dca6dc3d7e0a99a873b0f004d7aabc30ae407d3f48b0a79", size = "7245972" }, "macos-x64" = { url = "https://github.com/koalaman/shellcheck/releases/download/v{% raw %}{{version}}{% endraw %}/shellcheck-v{% raw %}{{version}}{% endraw %}.darwin.x86_64.tar.xz", checksum = "sha256:3c89db4edcab7cf1c27bff178882e0f6f27f7afdf54e859fa041fca10febe4c6", size = "4393952" }, "linux-arm64" = { url = "https://github.com/koalaman/shellcheck/releases/download/v{% raw %}{{version}}{% endraw %}/shellcheck-v{% raw %}{{version}}{% endraw %}.linux.aarch64.tar.xz", checksum = "sha256:12b331c1d2db6b9eb13cfca64306b1b157a86eb69db83023e261eaa7e7c14588", size = "6811484" }, "linux-x64" = { url = "https://github.com/koalaman/shellcheck/releases/download/v{% raw %}{{version}}{% endraw %}/shellcheck-v{% raw %}{{version}}{% endraw %}.linux.x86_64.tar.xz", checksum = "sha256:8c3be12b05d5c177a04c29e3c78ce89ac86f1595681cab149b65b97c4e227198", size = "2559196" } } } }
+set -euo pipefail
+
+cd "${MISE_PROJECT_ROOT:-$PWD}"
+
+# -exec ... + runs nothing when no file matches
+find . -type f -name '*.sh' -not -path './.git/*' -exec shellcheck "$@" {} +
