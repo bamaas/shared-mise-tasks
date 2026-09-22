@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#MISE description="Lint Python code with ruff (inline http tool, no stub)"
+#MISE tools={ "http:ruff" = { version = "0.15.22", platforms = { "macos-arm64" = { url = "https://github.com/astral-sh/ruff/releases/download/{% raw %}{{version}}{% endraw %}/ruff-aarch64-apple-darwin.tar.gz", checksum = "sha256:a2881af26fd1d19f4932c4ddf1e70b4e0efcf48513c5dae082564e03f0b467a3", size = "9953013" }, "macos-x64" = { url = "https://github.com/astral-sh/ruff/releases/download/{% raw %}{{version}}{% endraw %}/ruff-x86_64-apple-darwin.tar.gz", checksum = "sha256:687a9ceb88ab85dab061026d5017218225a481121b1a40862cc8f92b56f18090", size = "10608019" }, "linux-arm64" = { url = "https://github.com/astral-sh/ruff/releases/download/{% raw %}{{version}}{% endraw %}/ruff-aarch64-unknown-linux-gnu.tar.gz", checksum = "sha256:54ec426d839d7cea1096e9ea1c5486fd2f3df62ee6cfd71dc090b18f99bebd90", size = "10355557" }, "linux-x64" = { url = "https://github.com/astral-sh/ruff/releases/download/{% raw %}{{version}}{% endraw %}/ruff-x86_64-unknown-linux-gnu.tar.gz", checksum = "sha256:d535a4be6504146e757eff67b992f11a293a7a108be22e2a5898b32c32565996", size = "11011880" } } } }
+set -euo pipefail
+
+# The whole shared repo lands in mise's include cache, so config/ ships with tasks/
+SHARED="$(cd "$(dirname "$0")/../.." && pwd)"
+ROOT="${MISE_PROJECT_ROOT:-$PWD}"
+
+if [ -f "$ROOT/.lint/ruff.toml" ]; then
+    CONFIG="$ROOT/.lint/ruff.toml"
+else
+    CONFIG="$SHARED/config/ruff.toml"
+fi
+
+echo "[lint:ruff] config: $CONFIG"
+cd "$ROOT"
+ruff check --config "$CONFIG" "$@" .
