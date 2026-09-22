@@ -4,7 +4,7 @@ Central repository of mise tasks, tool declarations and linter configuration,
 consumed by many application repositories. One task definition serves both a
 developer laptop and a GitLab CI pipeline.
 
-This file is written for an agent picking the work up cold. It states what the
+Written for whoever picks this up cold, human or agent. It states what the
 design is, why each part exists, what has been verified by running it, and the
 traps that are easy to walk into.
 
