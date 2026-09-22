@@ -7,3 +7,5 @@ cd "${MISE_PROJECT_ROOT:-$PWD}"
 
 # -exec ... + runs nothing when no file matches
 find . -type f -name '*.sh' -not -path './.git/*' -exec shellcheck "$@" {} +
+
+echo "done"
